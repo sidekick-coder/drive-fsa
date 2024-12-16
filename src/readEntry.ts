@@ -1,15 +1,15 @@
 import { decode } from './decodeAndEncode'
 import { findHandle } from './findHandle'
 
-interface ReadEntryOptionsText {
+export interface ReadEntryOptionsText {
     contentType: 'text'
 }
 
-interface ReadEntryOptionsUint8Array {
+export interface ReadEntryOptionsUint8Array {
     contentType: 'uint8array'
 }
 
-interface ReadEntryOptionsJSON {
+export interface ReadEntryOptionsJSON {
     contentType: 'json'
 }
 
@@ -43,11 +43,17 @@ export function readEntry(
     options?: undefined
 ): Promise<Uint8Array>
 
-// Implementation
-export async function readEntry<T extends ReadEntryOptions>(
+export function readEntry(
     rootHandle: FileSystemDirectoryHandle,
     path: string,
-    options?: T
+    options?: ReadEntryOptions
+): Promise<Uint8Array>
+
+// Implementation
+export async function readEntry(
+    rootHandle: FileSystemDirectoryHandle,
+    path: string,
+    options?: ReadEntryOptions
 ): Promise<any> {
     const handle = await findHandle(rootHandle, path)
 

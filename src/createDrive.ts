@@ -3,7 +3,13 @@ import { findEntry } from './findEntry'
 import { ListEntriesOptions, listEntries } from './listEntries'
 import { makeDirectoryEntry, MakeDirectoryEntryOptions } from './makeDirectoryEntry'
 import { moveEntry } from './moveEntry'
-import { readEntry, ReadEntryOptions } from './readEntry'
+import {
+    readEntry,
+    ReadEntryOptions,
+    ReadEntryOptionsJSON,
+    ReadEntryOptionsText,
+    ReadEntryOptionsUint8Array,
+} from './readEntry'
 import { writeEntry, WriteEntryOptions } from './writeEntry'
 
 export interface CreateDriveOptions {
@@ -27,10 +33,17 @@ export function createDrive(rootHandle: FileSystemDirectoryHandle, options?: Cre
         return findEntry(rootHandle, path)
     }
 
-    function read<T extends ReadEntryOptions>(path: string, options?: T) {
+    // Overloads for `read`
+    function read(path: string, options: ReadEntryOptionsText): Promise<string>
+    function read(path: string, options: ReadEntryOptionsJSON): Promise<Record<string, any>>
+    function read(path: string, options: ReadEntryOptionsUint8Array): Promise<Uint8Array>
+    function read(path: string, options?: undefined): Promise<Uint8Array>
+
+    // Implementation of `read`
+    function read(path: string, options?: ReadEntryOptions) {
         logger.debug('[drive-fs-api] read', path)
 
-        return readEntry(rootHandle, path, options)
+        return readEntry(rootHandle, path, options) as any
     }
 
     function write(path: string, content: Uint8Array, options?: WriteEntryOptions) {
