@@ -1,18 +1,22 @@
-import { findBasename } from "./findBasename"
-import { findDirname } from "./findDirname"
-import { findHandle } from "./findHandle"
+import { findBasename } from './findBasename'
+import { findDirname } from './findDirname'
+import { findHandle } from './findHandle'
 
 export interface MakeDirectoryEntryOptions {
     recursive?: boolean
 }
 
-export async function makeDirectoryEntry(rootHandle: FileSystemDirectoryHandle, path: string, options?: MakeDirectoryEntryOptions) {
+export async function makeDirectoryEntry(
+    rootHandle: FileSystemDirectoryHandle,
+    path: string,
+    options?: MakeDirectoryEntryOptions
+) {
     const dirname = findDirname(path)
     const basename = findBasename(path)
 
     if (options?.recursive && (await findHandle(rootHandle, dirname)) === null) {
         await makeDirectoryEntry(rootHandle, dirname, {
-            recursive: true
+            recursive: true,
         })
     }
 
@@ -23,6 +27,6 @@ export async function makeDirectoryEntry(rootHandle: FileSystemDirectoryHandle, 
     }
 
     await folder.getDirectoryHandle(basename, {
-        create: true
-    })    
+        create: true,
+    })
 }

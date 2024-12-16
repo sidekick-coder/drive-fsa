@@ -7,5 +7,5 @@ export default defineConfig({
     clean: true,
     dts: true,
     format: ['esm', 'cjs'],
-    tsconfig:  'tsconfig.json',
+    tsconfig: 'tsconfig.json',
 })

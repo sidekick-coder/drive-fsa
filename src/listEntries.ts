@@ -1,13 +1,17 @@
-import type { FSADriveEntry } from "./driveEntry"
-import { findHandle } from "./findHandle"
-import { isRootPath } from "./isRootPath"
-import { resolvePath } from "./resolvePath"
+import type { FSADriveEntry } from './driveEntry'
+import { findHandle } from './findHandle'
+import { isRootPath } from './isRootPath'
+import { resolvePath } from './resolvePath'
 
 export interface ListEntriesOptions {
     recursive: boolean
 }
 
-export async function listEntries(rootHandle: FileSystemDirectoryHandle, path: string, options?: ListEntriesOptions): Promise<FSADriveEntry[]> {
+export async function listEntries(
+    rootHandle: FileSystemDirectoryHandle,
+    path: string,
+    options?: ListEntriesOptions
+): Promise<FSADriveEntry[]> {
     const result = [] as FSADriveEntry[]
 
     const folder = isRootPath(path) ? rootHandle : await findHandle(rootHandle, path)
@@ -21,12 +25,12 @@ export async function listEntries(rootHandle: FileSystemDirectoryHandle, path: s
             name: handle.name,
             path: resolvePath(path, handle.name),
             type: handle.kind === 'file' ? 'file' : 'directory',
-            handle: handle
+            handle: handle,
         })
 
         if (options?.recursive && handle.kind === 'directory') {
             const subPath = resolvePath(path, handle.name)
-            
+
             const subEntries = await listEntries(rootHandle, subPath, options)
 
             result.push(...subEntries)

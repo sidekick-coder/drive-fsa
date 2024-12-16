@@ -1,6 +1,6 @@
-import { isRootPath } from "./isRootPath"
+import { isRootPath } from './isRootPath'
 
-export function resolvePath (...path: string[]) {
+export function resolvePath(...path: string[]) {
     if (isRootPath(path.join('/'))) {
         return '/'
     }

@@ -1,26 +1,29 @@
-import { findBasename } from "./findBasename"
-import { findDirname } from "./findDirname"
-import { findHandle } from "./findHandle"
-import { makeDirectoryEntry } from "./makeDirectoryEntry"
+import { findBasename } from './findBasename'
+import { findDirname } from './findDirname'
+import { findHandle } from './findHandle'
+import { makeDirectoryEntry } from './makeDirectoryEntry'
 
 export interface WriteEntryOptions {
     recursive?: boolean
     contentType?: 'text' | 'uint8array' | 'json'
 }
 
-export type WriteEntryContent = string | Uint8Array | Object
+export type WriteEntryContent = string | Uint8Array | object
 
-export async function writeEntry(rootHandle: FileSystemDirectoryHandle, path: string, content: WriteEntryContent, options?: WriteEntryOptions) {
-
+export async function writeEntry(
+    rootHandle: FileSystemDirectoryHandle,
+    path: string,
+    content: WriteEntryContent,
+    options?: WriteEntryOptions
+) {
     const dirname = findDirname(path)
     const basename = findBasename(path)
 
     if (options?.recursive && (await findHandle(rootHandle, dirname)) === null) {
         await makeDirectoryEntry(rootHandle, dirname, {
-            recursive: true
+            recursive: true,
         })
     }
-
 
     const folder = await findHandle(rootHandle, dirname)
 
@@ -29,7 +32,7 @@ export async function writeEntry(rootHandle: FileSystemDirectoryHandle, path: st
     }
 
     const handle = await folder.getFileHandle(basename, {
-        create: true
+        create: true,
     })
 
     if (handle instanceof FileSystemFileHandle === false) {

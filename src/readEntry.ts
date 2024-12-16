@@ -1,5 +1,5 @@
-import { decode } from "./decodeAndEncode"
-import { findHandle } from "./findHandle"
+import { decode } from './decodeAndEncode'
+import { findHandle } from './findHandle'
 
 interface ReadEntryOptionsText {
     contentType: 'text'
@@ -13,17 +13,18 @@ interface ReadEntryOptionsJSON {
     contentType: 'json'
 }
 
-export type ReadEntryOptions = ReadEntryOptionsText | ReadEntryOptionsUint8Array | ReadEntryOptionsJSON
+export type ReadEntryOptions =
+    | ReadEntryOptionsText
+    | ReadEntryOptionsUint8Array
+    | ReadEntryOptionsJSON
 
-export type ReadEntryResponse<T extends ReadEntryOptions> = 
-T extends ReadEntryOptionsText 
-        ? string 
-        : T extends ReadEntryOptionsJSON 
-        ? Record<string, any>
-        : T extends ReadEntryOptionsUint8Array 
-        ? Uint8Array 
+export type ReadEntryResponse<T extends ReadEntryOptions> = T extends ReadEntryOptionsText
+    ? string
+    : T extends ReadEntryOptionsJSON
+      ? Record<string, any>
+      : T extends ReadEntryOptionsUint8Array
+        ? Uint8Array
         : Uint8Array
-
 
 export async function readEntry<T extends ReadEntryOptions>(
     rootHandle: FileSystemDirectoryHandle,
@@ -47,7 +48,7 @@ export async function readEntry<T extends ReadEntryOptions>(
     const uint8 = new Uint8Array(contents)
 
     if (options?.contentType === 'text') {
-        return  decode(uint8) as any
+        return decode(uint8) as any
     }
 
     if (options?.contentType === 'json') {
@@ -56,4 +57,3 @@ export async function readEntry<T extends ReadEntryOptions>(
 
     return uint8 as any
 }
-

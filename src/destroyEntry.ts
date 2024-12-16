@@ -1,9 +1,8 @@
-import { findBasename } from "./findBasename"
-import { findDirname } from "./findDirname"
-import { findHandle } from "./findHandle"
+import { findBasename } from './findBasename'
+import { findDirname } from './findDirname'
+import { findHandle } from './findHandle'
 
 export async function destroyEntry(rootHandle: FileSystemDirectoryHandle, path: string) {
-
     const dirname = findDirname(path)
     const basename = findBasename(path)
 
@@ -14,6 +13,6 @@ export async function destroyEntry(rootHandle: FileSystemDirectoryHandle, path: 
     }
 
     await folder.removeEntry(basename, {
-        recursive: true
+        recursive: true,
     })
 }
