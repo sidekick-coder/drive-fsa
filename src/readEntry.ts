@@ -18,19 +18,37 @@ export type ReadEntryOptions =
     | ReadEntryOptionsUint8Array
     | ReadEntryOptionsJSON
 
-export type ReadEntryResponse<T extends ReadEntryOptions> = T extends ReadEntryOptionsText
-    ? string
-    : T extends ReadEntryOptionsJSON
-      ? Record<string, any>
-      : T extends ReadEntryOptionsUint8Array
-        ? Uint8Array
-        : Uint8Array
+// Overloads signatures
+export function readEntry(
+    rootHandle: FileSystemDirectoryHandle,
+    path: string,
+    options: ReadEntryOptionsText
+): Promise<string>
 
+export function readEntry(
+    rootHandle: FileSystemDirectoryHandle,
+    path: string,
+    options: ReadEntryOptionsJSON
+): Promise<Record<string, any>>
+
+export function readEntry(
+    rootHandle: FileSystemDirectoryHandle,
+    path: string,
+    options: ReadEntryOptionsUint8Array
+): Promise<Uint8Array>
+
+export function readEntry(
+    rootHandle: FileSystemDirectoryHandle,
+    path: string,
+    options?: undefined
+): Promise<Uint8Array>
+
+// Implementation
 export async function readEntry<T extends ReadEntryOptions>(
     rootHandle: FileSystemDirectoryHandle,
     path: string,
     options?: T
-): Promise<ReadEntryResponse<T>> {
+): Promise<any> {
     const handle = await findHandle(rootHandle, path)
 
     if (!handle) {
