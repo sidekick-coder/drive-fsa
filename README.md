@@ -28,12 +28,22 @@ const entries = await drive.list('/subdir1/subdir2');
 const entry = await drive.get('/file.txt');
 
 // read file, returns a Uint8Array
-const data = await drive.read('/file.txt');
+const uint8 = await drive.read('/file.txt');
 
-const text = new TextDecoder().decode(data);
+// read file as text
+const text = await drive.read('/file.txt', { contentType: 'text' });
 
-// write to file, needs to be a Uint8Array
+// read file as json 
+const json = await drive.read('/file.txt', { contentType: 'json' });
+
+// write to file Uint8Array
 await drive.write('/file.txt', new TextEncoder().encode('Hello, World!'));
+
+// write to file text 
+await drive.write('/file.txt', 'Hello, World!', { contentType: 'text' });
+
+// write to file json 
+await drive.write('/file.txt', { hello: 'world' }, { contentType: 'json' });
 
 // delete file 
 await drive.destroy('/file.txt');
@@ -72,7 +82,15 @@ import { readEntry } from 'drive-fsa';
 
 const handle = await window.showDirectoryPicker();
 
-const data = await readEntry(handle, '/file.txt');
+const data = await readEntry(handle, '/file.txt'); // Promise<Uint8Array>
+```
+
+Use options to specify the content type
+
+```ts 
+readEntry(handle, '/file.txt', { contentType: 'text' }); // Promise<string>
+readEntry(handle, '/file.txt', { contentType: 'json' }); // Promise<Record<string, any>>
+readEntry(handle, '/file.txt', { contentType: 'uint8array' }); // Promise<Uint8Array>
 ```
 
 ## writeEntry 
@@ -80,11 +98,19 @@ const data = await readEntry(handle, '/file.txt');
 Write to a file
 
 ```ts 
-import { writeEntry } from 'drive-fsa';
+import { writeEntry, encode } from 'drive-fsa';
 
 const handle = await window.showDirectoryPicker();
 
-await writeEntry(handle, '/file.txt', new TextEncoder().encode('Hello, World!'));
+await writeEntry(handle, '/file.txt', encode('Hello, World!'));
+```
+
+Use options to specify the content type
+
+```ts 
+writeEntry(handle, '/file.txt', 'Hello, World!', { contentType: 'text' });
+writeEntry(handle, '/file.txt', { hello: 'world' }, { contentType: 'json' });
+writeEntry(handle, '/file.txt', new Uint8Array([1, 2, 3]), { contentType: 'uint8array' });
 ```
 
 ## destroyEntry 
