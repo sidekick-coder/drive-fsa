@@ -11,6 +11,8 @@ npm install drive-fsa
 
 ## createDrive
 
+Helper function to create a drive object from a directory handle
+
 ```ts
 import { createDrive } from 'drive-fsa';
 
@@ -93,6 +95,23 @@ readEntry(handle, '/file.txt', { contentType: 'json' }); // Promise<Record<strin
 readEntry(handle, '/file.txt', { contentType: 'uint8array' }); // Promise<Uint8Array>
 ```
 
+## makeDirectoryEntry
+
+Create a directory
+
+```ts 
+import { makeDirectoryEntry } from 'drive-fsa'; 
+
+const handle = await window.showDirectoryPicker();
+
+await makeDirectoryEntry(handle, '/subdir1/subdir2');
+```
+Create a directory recursively
+
+```ts 
+makeDirectoryEntry(handle, '/subdir1/subdir2', { recursive: true });
+```
+
 ## writeEntry 
 
 Write to a file
@@ -111,6 +130,12 @@ Use options to specify the content type
 writeEntry(handle, '/file.txt', 'Hello, World!', { contentType: 'text' });
 writeEntry(handle, '/file.txt', { hello: 'world' }, { contentType: 'json' });
 writeEntry(handle, '/file.txt', new Uint8Array([1, 2, 3]), { contentType: 'uint8array' });
+```
+
+Recursive write
+
+```ts 
+writeEntry(handle, '/subdir1/subdir2/file.txt', 'Hello, World!', { recursive: true });
 ```
 
 ## destroyEntry 
